@@ -1,0 +1,6 @@
+opencv-python>=4.9.0
+# mediapipe 0.10.15+ eski mp.solutions.face_mesh API'sini kaldirdi ve
+# yerine ayri model dosyasi indirmeyi gerektiren Tasks API'sini getirdi.
+# Kurulumu tek pip install ile basit tutmak icin bu surume sabitlendi.
+mediapipe==0.10.14
+numpy>=1.26.0

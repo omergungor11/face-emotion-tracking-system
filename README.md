@@ -1,0 +1,105 @@
+# Face Emotion Tracking System
+
+Webcam üzerinden gerçek zamanlı yüz ifadesi analiz ederek **Happy / Neutral / Sad / Surprised**
+duygularını tahmin eden, kullanıcının kendi yüzüne kalibre olan bir Python uygulaması.
+
+MediaPipe Face Mesh'in 468 landmark noktasından geometrik özellikler (göz açıklığı,
+ağız açıklığı, gülümseme indeksi, kaş kalkması) çıkarılır; herhangi bir eğitim
+verisi ya da hazır model kullanılmadan, tamamen açıklanabilir bir **kural tabanlı**
+algoritma ile duygu tahmini yapılır.
+
+![demo](assets/demo.gif)
+<!-- Uygulamayi calistirip 's' tusuyla ekran goruntusu aldiktan / ekran kaydi
+     yaptiktan sonra bu GIF'i assets/demo.gif olarak ekleyin. -->
+
+## Özellikler
+
+- **Kişiye özel kalibrasyon** — uygulama açılışta senin nötr yüzünü baseline olarak alır
+- **Kural tabanlı, açıklanabilir algoritma** — kara kutu bir model yok, her karar geometrik bir ölçüme dayanır
+- Canlı HUD: duygu etiketi, 4 duygu için olasılık bar'ları, son 10 saniyenin duygu zaman çizelgesi, FPS sayacı
+- Landmark mesh görselleştirme (açılabilir/kapanabilir)
+- Tek tuşla ekran görüntüsü alma
+- Webcam/MediaPipe gerektirmeyen, `pytest` ile çalışan birim testleri
+
+## Kurulum
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## Kullanım
+
+```bash
+python main.py
+```
+
+Uygulama açıldığında ekrandaki geri sayım boyunca nötr bir yüz ifadesi takının —
+bu senin kişisel referansın olacak. Kalibrasyon bittikten sonra canlı duygu
+tahmini başlar.
+
+**Tuşlar:**
+
+| Tuş | İşlev |
+|-----|-------|
+| `c` | Yeniden kalibrasyon başlat |
+| `m` | Landmark mesh görünümünü aç/kapat |
+| `s` | Ekran görüntüsü kaydet (`assets/screenshots/`) |
+| `q` / `ESC` | Çıkış |
+
+Farklı bir kamera veya kalibrasyon profili kullanmak için:
+
+```bash
+python main.py --camera 1 --calibration-file calibration_profiles/omer.json
+```
+
+## Nasıl Çalışır
+
+1. **Landmark çıkarımı** — MediaPipe Face Mesh her kareden 468 3D yüz noktası üretir.
+2. **Özellik çıkarımı** (`src/features.py`) — göz-arası mesafeyle normalize edilmiş
+   4 geometrik özellik hesaplanır: EAR (göz açıklığı), MAR (ağız açıklığı),
+   smile index (ağız köşelerinin konumu) ve brow raise (kaş kalkması).
+3. **Kalibrasyon** (`src/calibration.py`) — açılışta birkaç saniye nötr ifade
+   ölçülür, aykırı değerler filtrelenip ortalaması kişisel `baseline` olarak
+   kaydedilir (`calibration_profiles/`).
+4. **Sınıflandırma** (`src/emotion_classifier.py`) — her karede
+   `delta = özellikler - baseline` hesaplanır, duygu skorları softmax ile
+   olasılığa çevrilir ve son karelerin ortalaması alınarak titreme önlenir.
+5. **HUD** (`src/hud.py`) — OpenCV ile sonuçlar canlı olarak çizilir.
+
+## Proje Yapısı
+
+```
+face-emotion-tracking-system/
+├── main.py                    # giris noktasi
+├── src/
+│   ├── config.py               # landmark indeksleri, esikler, renkler
+│   ├── face_mesh.py            # MediaPipe FaceMesh sarmalayici
+│   ├── features.py             # geometrik ozellik cikarimi
+│   ├── calibration.py          # baseline yakalama/kaydetme/yukleme
+│   ├── emotion_classifier.py   # kural tabanli siniflandirma
+│   ├── hud.py                  # OpenCV overlay
+│   └── app.py                  # ana dongu
+├── tests/                       # webcam gerektirmeyen birim testleri
+├── calibration_profiles/        # kisisel baseline dosyalari (gitignore'da)
+└── assets/                      # demo gorselleri
+```
+
+## Test
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+## Sınırlamalar
+
+- Tek yüz takibi için tasarlandı (aynı anda birden fazla kişi desteklenmez).
+- Kalibrasyon kişiye özeldir; profil dosyası paylaşılan bir bilgisayarda
+  kullanıcılar arasında yeniden yapılmalıdır.
+- Aydınlatma koşulları ve kamera açısı geometrik ölçümleri etkileyebilir.
+
+## Lisans
+
+MIT — detaylar için [LICENSE](LICENSE) dosyasına bakın.

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# kisisel kalibrasyon profilleri paylasilmaz
+calibration_profiles/*.json
+
+# ekran goruntuleri gitignore, sadece demo icin secilenler assets/ altina elle eklenir
+assets/screenshots/*
+!assets/screenshots/.gitkeep
+
+.DS_Store
