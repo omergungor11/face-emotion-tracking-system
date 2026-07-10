@@ -8,9 +8,9 @@ ağız açıklığı, gülümseme indeksi, kaş kalkması) çıkarılır; herhan
 verisi ya da hazır model kullanılmadan, tamamen açıklanabilir bir **kural tabanlı**
 algoritma ile duygu tahmini yapılır.
 
-![demo](assets/demo.gif)
-<!-- Uygulamayi calistirip 's' tusuyla ekran goruntusu aldiktan / ekran kaydi
-     yaptiktan sonra bu GIF'i assets/demo.gif olarak ekleyin. -->
+> **Demo:** Uygulamayi calistirip `s` tusuyla ekran goruntusu alarak ya da ekran
+> kaydi yaparak `assets/demo.gif` dosyasini ekleyebilir, bu bolume
+> `![demo](assets/demo.gif)` seklinde referans verebilirsin.
 
 ## Özellikler
 
