@@ -65,6 +65,12 @@ tuşuna basarak yeniden kalibrasyon yapın; yeni ölçüm seçili profil dosyas�
 | `s` | Ekran görüntüsü kaydet (`assets/screenshots/`) |
 | `q` / `ESC` | Çıkış |
 
+`s` ile kaydedilen ekran görüntüleri `assets/screenshots/` dizinine yazılır.
+Bu dizindeki görüntüler `.gitignore` kapsamındadır; bu nedenle `git status`
+çıktısında görünmezler. Depoda paylaşmak istediğiniz bir demo görüntüsünü
+seçip `assets/demo.png` gibi bu dizinin dışındaki bir konuma kopyalayın ve
+yalnızca seçtiğiniz dosyayı Git'e ekleyin.
+
 Farklı bir kamera veya kalibrasyon profili kullanmak için:
 
 ```bash
