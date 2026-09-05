@@ -23,10 +23,21 @@ algoritma ile duygu tahmini yapılır.
 
 ## Kurulum
 
+Önce depoyu indirip proje dizinine geçin:
+
+```bash
+git clone https://github.com/omergungor11/face-emotion-tracking-system.git
+cd face-emotion-tracking-system
+```
+
+Ardından sanal ortamı oluşturup bağımlılıkları yükleyin. Aşağıdaki etkinleştirme
+komutu macOS/Linux içindir; Windows PowerShell'de `.venv\Scripts\Activate.ps1`,
+Komut İstemi'nde (cmd) `.venv\Scripts\activate.bat` kullanın.
+
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
 ## Kullanım
