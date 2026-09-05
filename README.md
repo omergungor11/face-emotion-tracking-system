@@ -14,7 +14,7 @@ algoritma ile duygu tahmini yapılır.
 
 ## Özellikler
 
-- **Kişiye özel kalibrasyon** — uygulama açılışta senin nötr yüzünü baseline olarak alır
+- **Kişiye özel kalibrasyon** — ilk kullanımda nötr yüzünü baseline olarak alır, sonraki açılışlarda kayıtlı profili yükler
 - **Kural tabanlı, açıklanabilir algoritma** — kara kutu bir model yok, her karar geometrik bir ölçüme dayanır
 - Canlı HUD: duygu etiketi, 4 duygu için olasılık bar'ları, son 10 saniyenin duygu zaman çizelgesi, FPS sayacı
 - Landmark mesh görselleştirme (açılabilir/kapanabilir)
@@ -46,9 +46,15 @@ python -m pip install -r requirements.txt
 python main.py
 ```
 
-Uygulama açıldığında ekrandaki geri sayım boyunca nötr bir yüz ifadesi takının —
-bu senin kişisel referansın olacak. Kalibrasyon bittikten sonra canlı duygu
-tahmini başlar.
+Seçilen kalibrasyon dosyası henüz yoksa uygulama açılışta kalibrasyon başlatır.
+Ekrandaki geri sayım boyunca nötr bir yüz ifadesi takının — bu senin kişisel
+referansın olacak. Kalibrasyon bittikten sonra profil kaydedilir ve canlı duygu
+tahmini başlar. Varsayılan dosya `calibration_profiles/default.json` konumundadır.
+
+Kayıtlı bir profil varsa sonraki açılışlarda doğrudan duygu tahmini başlar.
+Kullanıcı veya çekim koşulları değiştiğinde uygulama penceresi odaktayken `c`
+tuşuna basarak yeniden kalibrasyon yapın; yeni ölçüm seçili profil dosyasının
+üzerine kaydedilir.
 
 **Tuşlar:**
 
@@ -71,9 +77,9 @@ python main.py --camera 1 --calibration-file calibration_profiles/omer.json
 2. **Özellik çıkarımı** (`src/features.py`) — göz-arası mesafeyle normalize edilmiş
    4 geometrik özellik hesaplanır: EAR (göz açıklığı), MAR (ağız açıklığı),
    smile index (ağız köşelerinin konumu) ve brow raise (kaş kalkması).
-3. **Kalibrasyon** (`src/calibration.py`) — açılışta birkaç saniye nötr ifade
-   ölçülür, aykırı değerler filtrelenip ortalaması kişisel `baseline` olarak
-   kaydedilir (`calibration_profiles/`).
+3. **Kalibrasyon** (`src/calibration.py`) — kayıtlı profil yoksa veya `c` tuşuna
+   basılırsa birkaç saniye nötr ifade ölçülür; aykırı değerler filtrelenip
+   ortalaması kişisel `baseline` olarak seçili profil dosyasına kaydedilir.
 4. **Sınıflandırma** (`src/emotion_classifier.py`) — her karede
    `delta = özellikler - baseline` hesaplanır, duygu skorları softmax ile
    olasılığa çevrilir ve son karelerin ortalaması alınarak titreme önlenir.
